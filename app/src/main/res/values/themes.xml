@@ -2,6 +2,8 @@
 <resources>
     <style name="Theme.ScreenLit" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/white</item>
+        <item name="background">@color/white</item>
+        <item name="android:windowBackground">@color/white</item>
         <item name="android:statusBarColor">@color/grey_100</item>
     </style>
 
