@@ -1,14 +1,15 @@
 package dev.gerlot.screenlit
 
-import androidx.appcompat.app.AppCompatActivity
 import android.annotation.SuppressLint
-import android.app.ProgressDialog.show
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.GestureDetector
+import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowInsets
@@ -16,11 +17,13 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import dev.gerlot.screenlit.extension.setSystemBarBackgrounds
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -68,6 +71,8 @@ class ScreenLitActivity : AppCompatActivity() {
 
     private val hideRunnable = Runnable { hide() }
 
+    private var isNightVision: Boolean = false
+
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
@@ -100,7 +105,22 @@ class ScreenLitActivity : AppCompatActivity() {
 
         // Set up the user interaction to manually show or hide the system UI.
         fullscreenContent = findViewById(R.id.fullscreen_content)
-        fullscreenContent.setOnClickListener { toggle() }
+        val gestureDetector = GestureDetector(this, object : SimpleOnGestureListener() {
+            override fun onDown(e: MotionEvent): Boolean {
+                return true
+            }
+
+            override fun onDoubleTap(e: MotionEvent): Boolean {
+                toggleNightVisionMode()
+                return true
+            }
+
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                toggle()
+                return true
+            }
+        })
+        fullscreenContent.setOnTouchListener { _, motionEvent -> gestureDetector.onTouchEvent(motionEvent) }
 
         gestureDescriptionTv = findViewById(R.id.gestureDescriptionTv)
 
@@ -119,6 +139,19 @@ class ScreenLitActivity : AppCompatActivity() {
         // created, to briefly hint to the user that UI controls
         // are available.
         delayedHide(2000)
+    }
+
+    private fun toggleNightVisionMode() {
+        if (isNightVision) {
+            fullscreenContent.setBackgroundColor(Color.WHITE)
+            val statusBarColor = ResourcesCompat.getColor(resources, R.color.grey_100, null)
+            val navigationBarColor = ResourcesCompat.getColor(resources, R.color.grey_100, null)
+            setSystemBarBackgrounds(statusBarColor, navigationBarColor)
+        } else {
+            fullscreenContent.setBackgroundColor(Color.RED)
+            setSystemBarBackgrounds(Color.RED, Color.RED)
+        }
+        isNightVision = !isNightVision
     }
 
     private fun toggle() {
