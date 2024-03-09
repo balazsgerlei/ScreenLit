@@ -24,7 +24,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import dev.gerlot.screenlit.extension.setSystemBarBackgrounds
 
-
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
@@ -155,6 +154,7 @@ class ScreenLitActivity : AppCompatActivity() {
     }
 
     private fun toggle() {
+        hideHandler.removeCallbacks(hideRunnable)
         if (isFullscreen) {
             hide()
         } else {
