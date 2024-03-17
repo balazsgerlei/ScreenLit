@@ -13,6 +13,7 @@ import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowInsets
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -23,6 +24,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import dev.gerlot.screenlit.extension.setSystemBarBackgrounds
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -119,7 +121,14 @@ class ScreenLitActivity : AppCompatActivity() {
                 return true
             }
         })
-        fullscreenContent.setOnTouchListener { _, motionEvent -> gestureDetector.onTouchEvent(motionEvent) }
+        fullscreenContent.setOnTouchListener { view, motionEvent ->
+            gestureDetector.onTouchEvent(motionEvent)
+            if (motionEvent.actionMasked == MotionEvent.ACTION_MOVE) {
+                val y = 1f.minus(Math.round((motionEvent.y / view.height) * 1000f) / 1000f)
+                setScreenBrightness(y)
+            }
+            true
+        }
 
         gestureDescriptionTv = findViewById(R.id.gestureDescriptionTv)
 
@@ -138,6 +147,12 @@ class ScreenLitActivity : AppCompatActivity() {
         // created, to briefly hint to the user that UI controls
         // are available.
         delayedHide(2000)
+    }
+
+    private fun setScreenBrightness(brightness: Float) {
+        val layout: WindowManager.LayoutParams? = window?.attributes
+        layout?.screenBrightness = brightness
+        window?.attributes = layout
     }
 
     private fun toggleNightVisionMode() {
