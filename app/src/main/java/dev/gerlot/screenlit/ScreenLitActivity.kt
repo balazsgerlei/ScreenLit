@@ -13,7 +13,6 @@ import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowInsets
-import android.view.WindowManager
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -74,6 +73,9 @@ class ScreenLitActivity : AppCompatActivity() {
 
     private var isNightVision: Boolean = false
 
+    private var screenBrightnessChangeStart: Float? = null
+    private var screenBrightnessAtChangeStart: Float? = null
+
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
@@ -123,9 +125,21 @@ class ScreenLitActivity : AppCompatActivity() {
         })
         fullscreenContent.setOnTouchListener { view, motionEvent ->
             gestureDetector.onTouchEvent(motionEvent)
-            if (motionEvent.actionMasked == MotionEvent.ACTION_MOVE) {
-                val y = 1f.minus(Math.round((motionEvent.y / view.height) * 1000f) / 1000f)
-                setScreenBrightness(y)
+            when(motionEvent.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    screenBrightnessChangeStart = calculateNormalizedScreenPosition(motionEvent.y, view.height)
+                    screenBrightnessAtChangeStart = window?.attributes?.let { Math.round(it.screenBrightness * 1000f) / 1000f }
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    screenBrightnessChangeStart?.let {
+                        val screenBrightness = Math.round((calculateNormalizedScreenPosition(motionEvent.y, view.height) - it) * 1000f) / 1000f
+                        setScreenBrightness(screenBrightness)
+                    }
+                }
+                MotionEvent.ACTION_UP -> {
+                    screenBrightnessChangeStart = null
+                    screenBrightnessAtChangeStart = null
+                }
             }
             true
         }
@@ -149,10 +163,16 @@ class ScreenLitActivity : AppCompatActivity() {
         delayedHide(2000)
     }
 
+    private fun calculateNormalizedScreenPosition(y: Float, viewHeight: Int) = Math.round(1f.minus(Math.round((y / viewHeight) * 1000f) / 1000f) * 1000f) / 1000f
+
     private fun setScreenBrightness(brightness: Float) {
-        val layout: WindowManager.LayoutParams? = window?.attributes
-        layout?.screenBrightness = brightness
-        window?.attributes = layout
+        window?.attributes?.let { layoutParams ->
+            val previousBrightness = screenBrightnessAtChangeStart
+            previousBrightness?.let {
+                layoutParams.screenBrightness = (Math.round((it + brightness) * 1000f) / 1000f).coerceIn(0f, 1f)
+                window?.attributes = layoutParams
+            }
+        }
     }
 
     private fun toggleNightVisionMode() {
