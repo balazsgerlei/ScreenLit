@@ -49,6 +49,6 @@
         android:gravity="center"
         android:keepScreenOn="true"
         android:text="@string/gesture_description"
-        android:textColor="?attr/fullscreenTextColor" />
+        android:textColor="@color/grey_500" />
 
 </FrameLayout>
