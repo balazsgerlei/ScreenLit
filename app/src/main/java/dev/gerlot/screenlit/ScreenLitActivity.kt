@@ -132,8 +132,8 @@ class ScreenLitActivity : AppCompatActivity() {
                 }
                 MotionEvent.ACTION_MOVE -> {
                     screenBrightnessChangeStart?.let {
-                        val screenBrightness = Math.round((calculateNormalizedScreenPosition(motionEvent.y, view.height) - it) * 1000f) / 1000f
-                        setScreenBrightness(screenBrightness)
+                        val screenBrightnessChange = Math.round((calculateNormalizedScreenPosition(motionEvent.y, view.height) - it) * 1000f) / 1000f * 2f
+                        changeScreenBrightness(screenBrightnessChange)
                     }
                 }
                 MotionEvent.ACTION_UP -> {
@@ -165,11 +165,11 @@ class ScreenLitActivity : AppCompatActivity() {
 
     private fun calculateNormalizedScreenPosition(y: Float, viewHeight: Int) = Math.round(1f.minus(Math.round((y / viewHeight) * 1000f) / 1000f) * 1000f) / 1000f
 
-    private fun setScreenBrightness(brightness: Float) {
+    private fun changeScreenBrightness(brightnessChange: Float) {
         window?.attributes?.let { layoutParams ->
             val previousBrightness = screenBrightnessAtChangeStart
             previousBrightness?.let {
-                layoutParams.screenBrightness = (Math.round((it + brightness) * 1000f) / 1000f).coerceIn(0f, 1f)
+                layoutParams.screenBrightness = (Math.round((it + brightnessChange) * 1000f) / 1000f).coerceIn(0f, 1f)
                 window?.attributes = layoutParams
             }
         }
