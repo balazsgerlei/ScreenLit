@@ -181,9 +181,11 @@ class ScreenLitActivity : AppCompatActivity() {
             val statusBarColor = ResourcesCompat.getColor(resources, R.color.grey_100, null)
             val navigationBarColor = ResourcesCompat.getColor(resources, R.color.grey_100, null)
             setSystemBarBackgrounds(statusBarColor, navigationBarColor)
+            gestureDescriptionTv.setTextColor(ResourcesCompat.getColor(resources, R.color.grey_500, null))
         } else {
             fullscreenContent.setBackgroundColor(Color.RED)
             setSystemBarBackgrounds(Color.RED, Color.RED)
+            gestureDescriptionTv.setTextColor(ResourcesCompat.getColor(resources, R.color.grey_100, null))
         }
         isNightVision = !isNightVision
     }
