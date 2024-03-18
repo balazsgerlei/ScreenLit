@@ -164,7 +164,7 @@ class ScreenLitActivity : AppCompatActivity() {
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
-        delayedHide(INITIAL_AUTO_HIDE_DELAY_MILLIS)
+        //delayedHide(INITIAL_AUTO_HIDE_DELAY_MILLIS)
     }
 
     private fun calculateNormalizedScreenPosition(y: Float, viewHeight: Int) = Math.round(1f.minus(Math.round((y / viewHeight) * 1000f) / 1000f) * 1000f) / 1000f
