@@ -2,5 +2,5 @@
     <string name="app_name">ScreenLit</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="gesture_description">Hide/show UI by tapping\n\nDouble tap for Night Vision preserving (red light) mode\n\nChange brightness by swiping up or down</string>
+    <string name="gesture_description">Tap to hide/show UI\n\nDouble tap for Night Vision preserving red light\n\nSwipe up/down to change brightness</string>
 </resources>
