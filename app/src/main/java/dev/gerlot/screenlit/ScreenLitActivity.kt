@@ -132,8 +132,12 @@ class ScreenLitActivity : AppCompatActivity() {
                 }
                 MotionEvent.ACTION_MOVE -> {
                     screenBrightnessChangeStart?.let {
-                        val screenBrightnessChange = Math.round((calculateNormalizedScreenPosition(motionEvent.y, view.height) - it) * 1000f) / 1000f * 2f
-                        changeScreenBrightness(screenBrightnessChange)
+                        val viewHeight = view.height
+                        val y = motionEvent.y
+                        if (isWithinActiveBounds(y, viewHeight)) {
+                            val screenBrightnessChange = Math.round((calculateNormalizedScreenPosition(y, viewHeight) - it) * 1000f) / 1000f * 2f
+                            changeScreenBrightness(screenBrightnessChange)
+                        }
                     }
                 }
                 MotionEvent.ACTION_UP -> {
@@ -164,6 +168,12 @@ class ScreenLitActivity : AppCompatActivity() {
     }
 
     private fun calculateNormalizedScreenPosition(y: Float, viewHeight: Int) = Math.round(1f.minus(Math.round((y / viewHeight) * 1000f) / 1000f) * 1000f) / 1000f
+
+    private fun isWithinActiveBounds(y: Float, viewHeight: Int): Boolean {
+        val topInset = Math.round((viewHeight / TOP_INSET_DIVISOR) * 1000f) / 1000f
+        val bottomInset = Math.round((viewHeight - (viewHeight / BOTTOM_INSET_DIVISOR)) * 1000f) / 1000f
+        return y in topInset..bottomInset
+    }
 
     private fun changeScreenBrightness(brightnessChange: Float) {
         window?.attributes?.let { layoutParams ->
@@ -256,6 +266,10 @@ class ScreenLitActivity : AppCompatActivity() {
         private const val UI_ANIMATION_DELAY_MILLIS = 300
 
         private const val INITIAL_AUTO_HIDE_DELAY_MILLIS = 4000
+
+        private const val TOP_INSET_DIVISOR = 10f
+
+        private const val BOTTOM_INSET_DIVISOR = 10f
 
         fun newIntent(context: Context) = Intent(context, ScreenLitActivity::class.java)
 
