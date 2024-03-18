@@ -160,7 +160,7 @@ class ScreenLitActivity : AppCompatActivity() {
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
-        delayedHide(2000)
+        delayedHide(INITIAL_AUTO_HIDE_DELAY_MILLIS)
     }
 
     private fun calculateNormalizedScreenPosition(y: Float, viewHeight: Int) = Math.round(1f.minus(Math.round((y / viewHeight) * 1000f) / 1000f) * 1000f) / 1000f
@@ -208,7 +208,7 @@ class ScreenLitActivity : AppCompatActivity() {
 
         // Schedule a runnable to remove the status and navigation bar after a delay
         hideHandler.removeCallbacks(showPart2Runnable)
-        hideHandler.postDelayed(hidePart2Runnable, UI_ANIMATION_DELAY.toLong())
+        hideHandler.postDelayed(hidePart2Runnable, UI_ANIMATION_DELAY_MILLIS.toLong())
     }
 
     private fun show() {
@@ -224,7 +224,7 @@ class ScreenLitActivity : AppCompatActivity() {
 
         // Schedule a runnable to display UI elements after a delay
         hideHandler.removeCallbacks(hidePart2Runnable)
-        hideHandler.postDelayed(showPart2Runnable, UI_ANIMATION_DELAY.toLong())
+        hideHandler.postDelayed(showPart2Runnable, UI_ANIMATION_DELAY_MILLIS.toLong())
     }
 
     /**
@@ -253,7 +253,9 @@ class ScreenLitActivity : AppCompatActivity() {
          * Some older devices needs a small delay between UI widget updates
          * and a change of the status and navigation bar.
          */
-        private const val UI_ANIMATION_DELAY = 300
+        private const val UI_ANIMATION_DELAY_MILLIS = 300
+
+        private const val INITIAL_AUTO_HIDE_DELAY_MILLIS = 4000
 
         fun newIntent(context: Context) = Intent(context, ScreenLitActivity::class.java)
 
