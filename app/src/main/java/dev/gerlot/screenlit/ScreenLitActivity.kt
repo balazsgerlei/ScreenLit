@@ -23,6 +23,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import dev.gerlot.screenlit.extension.setSystemBarBackgrounds
+import kotlin.math.abs
 
 
 /**
@@ -127,15 +128,17 @@ class ScreenLitActivity : AppCompatActivity() {
             gestureDetector.onTouchEvent(motionEvent)
             when(motionEvent.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
-                    screenBrightnessChangeStart = calculateNormalizedScreenPosition(motionEvent.y, view.height)
+                    screenBrightnessChangeStart = motionEvent.y
                     screenBrightnessAtChangeStart = window?.attributes?.let { Math.round(it.screenBrightness * 1000f) / 1000f }
                 }
                 MotionEvent.ACTION_MOVE -> {
-                    screenBrightnessChangeStart?.let {
+                    screenBrightnessChangeStart?.let { start ->
                         val viewHeight = view.height
+                        val normalizedStart = calculateNormalizedScreenPosition(start, view.height)
                         val y = motionEvent.y
-                        if (isWithinActiveBounds(y, viewHeight)) {
-                            val screenBrightnessChange = Math.round((calculateNormalizedScreenPosition(y, viewHeight) - it) * 1000f) / 1000f * 2f
+                        if (isWithinActiveBounds(y, viewHeight) && !isSmallMove(start, y, viewHeight)) {
+                            val normalizedScreenPosition = calculateNormalizedScreenPosition(y, viewHeight)
+                            val screenBrightnessChange = Math.round((normalizedScreenPosition - normalizedStart) * 1000f) / 1000f * 2f
                             changeScreenBrightness(screenBrightnessChange)
                         }
                     }
@@ -173,6 +176,12 @@ class ScreenLitActivity : AppCompatActivity() {
         val topInset = Math.round((viewHeight / TOP_INSET_DIVISOR) * 1000f) / 1000f
         val bottomInset = Math.round((viewHeight - (viewHeight / BOTTOM_INSET_DIVISOR)) * 1000f) / 1000f
         return y in topInset..bottomInset
+    }
+
+    private fun isSmallMove(start: Float, y: Float, viewHeight: Int): Boolean {
+        val distance = abs(start - y)
+        val threshold = viewHeight / CHANGE_THRESHOLD_DIVISOR
+        return distance < threshold
     }
 
     private fun changeScreenBrightness(brightnessChange: Float) {
@@ -270,6 +279,8 @@ class ScreenLitActivity : AppCompatActivity() {
         private const val TOP_INSET_DIVISOR = 10f
 
         private const val BOTTOM_INSET_DIVISOR = 10f
+
+        private const val CHANGE_THRESHOLD_DIVISOR = 150f
 
         fun newIntent(context: Context) = Intent(context, ScreenLitActivity::class.java)
 
