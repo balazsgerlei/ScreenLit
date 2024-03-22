@@ -283,7 +283,7 @@ class ScreenLitActivity : AppCompatActivity() {
 
         private const val BOTTOM_INSET_DIVISOR = 10f
 
-        private const val CHANGE_THRESHOLD_DIVISOR = 150f
+        private const val CHANGE_THRESHOLD_DIVISOR = 160f
 
         fun newIntent(context: Context) = Intent(context, ScreenLitActivity::class.java)
 
