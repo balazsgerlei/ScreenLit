@@ -128,15 +128,18 @@ class ScreenLitActivity : AppCompatActivity() {
             gestureDetector.onTouchEvent(motionEvent)
             when(motionEvent.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
-                    screenBrightnessChangeStart = motionEvent.y
-                    screenBrightnessAtChangeStart = window?.attributes?.let { Math.round(it.screenBrightness * 1000f) / 1000f }
+                    val y = motionEvent.y
+                    if (isWithinActiveBounds(y, view.height)) { // Ignore movement starting out-of-bound
+                        screenBrightnessChangeStart = motionEvent.y
+                        screenBrightnessAtChangeStart = window?.attributes?.let { Math.round(it.screenBrightness * 1000f) / 1000f }
+                    }
                 }
                 MotionEvent.ACTION_MOVE -> {
                     screenBrightnessChangeStart?.let { start ->
                         val viewHeight = view.height
                         val normalizedStart = calculateNormalizedScreenPosition(start, view.height)
                         val y = motionEvent.y
-                        if (isWithinActiveBounds(y, viewHeight) && !isSmallMove(start, y, viewHeight)) {
+                        if (!isSmallMove(start, y, viewHeight)) { // Ignore small movement that can be an imprecise tap
                             val normalizedScreenPosition = calculateNormalizedScreenPosition(y, viewHeight)
                             val screenBrightnessChange = Math.round((normalizedScreenPosition - normalizedStart) * 1000f) / 1000f * 2f
                             changeScreenBrightness(screenBrightnessChange)
