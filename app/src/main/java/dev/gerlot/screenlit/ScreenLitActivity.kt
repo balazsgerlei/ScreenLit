@@ -22,6 +22,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.preference.PreferenceManager
 import dev.gerlot.screenlit.extension.setSystemBarBackgrounds
 import kotlin.math.abs
 
@@ -167,10 +168,23 @@ class ScreenLitActivity : AppCompatActivity() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        //delayedHide(INITIAL_AUTO_HIDE_DELAY_MILLIS)
+        if (isFirstLaunch()) {
+            onFirstLaunch()
+        } else {
+            // Trigger the initial hide() shortly after the activity has been
+            // created, to briefly hint to the user that UI controls
+            // are available.
+            delayedHide(INITIAL_AUTO_HIDE_DELAY_MILLIS)
+        }
+    }
+
+    private fun isFirstLaunch() = !PreferenceManager.getDefaultSharedPreferences(this).getBoolean(KEY_LAUNCHED_BEFORE, false)
+
+    private fun onFirstLaunch() {
+        PreferenceManager.getDefaultSharedPreferences(this)
+            .edit()
+            .putBoolean(KEY_LAUNCHED_BEFORE, true)
+            .apply()
     }
 
     private fun calculateNormalizedScreenPosition(y: Float, viewHeight: Int) = Math.round(1f.minus(Math.round((y / viewHeight) * 1000f) / 1000f) * 1000f) / 1000f
@@ -259,6 +273,9 @@ class ScreenLitActivity : AppCompatActivity() {
     }
 
     companion object {
+
+        private const val KEY_LAUNCHED_BEFORE = "launched_before"
+
         /**
          * Whether or not the system UI should be auto-hidden after
          * [AUTO_HIDE_DELAY_MILLIS] milliseconds.
