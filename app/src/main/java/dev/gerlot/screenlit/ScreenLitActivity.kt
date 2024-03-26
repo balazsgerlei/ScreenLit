@@ -1,6 +1,7 @@
 package dev.gerlot.screenlit
 
 import android.animation.Animator
+import android.animation.AnimatorSet
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
@@ -20,6 +21,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.WindowCompat
@@ -216,13 +218,56 @@ class ScreenLitActivity : AppCompatActivity() {
     }
 
     private fun toggleNightVisionMode() {
-        val currentBackgroundColor = if (isNightVision) Color.RED else Color.WHITE
-        val newBackgroundColor = if (isNightVision) Color.WHITE else Color.RED
-        val newStatusBarColor = if (isNightVision) ResourcesCompat.getColor(resources, R.color.grey_100, null) else Color.RED
-        val newNavigationBarColor = if (isNightVision) ResourcesCompat.getColor(resources, R.color.grey_100, null) else Color.RED
-        val newTutorialTextColor = if (isNightVision) R.color.grey_500 else R.color.grey_100
+        crossFadeUi(
+            currentBackgroundColor = if (isNightVision) Color.RED else Color.WHITE,
+            newBackgroundColor = if (isNightVision) Color.WHITE else Color.RED,
+            newStatusBarColor = if (isNightVision) ResourcesCompat.getColor(resources, R.color.grey_100, null) else Color.RED,
+            newNavigationBarColor = if (isNightVision) ResourcesCompat.getColor(resources, R.color.grey_100, null) else Color.RED,
+            newTutorialTextColor = if (isNightVision) ResourcesCompat.getColor(resources, R.color.grey_500, null) else ResourcesCompat.getColor(resources, R.color.grey_100, null),
+            onAnimationEnd = {
+                isNightVision = !isNightVision
+            }
+        )
+    }
 
-        ObjectAnimator.ofObject(
+    private fun crossFadeUi(
+        @ColorInt currentBackgroundColor: Int,
+        @ColorInt newBackgroundColor: Int,
+        @ColorInt newStatusBarColor: Int,
+        @ColorInt newNavigationBarColor: Int,
+        @ColorInt newTutorialTextColor: Int,
+        onAnimationEnd: () -> Unit,
+    ) {
+        val textColorAnimator = ObjectAnimator.ofObject(
+            gestureDescriptionTv,
+            "textColor",
+            ArgbEvaluator(),
+            gestureDescriptionTv.currentTextColor,
+            newTutorialTextColor
+        ).apply {
+            duration = UI_MODE_CROSSFADE_DURATION_MILLIS
+        }
+        val statusBarColorAnimator = ObjectAnimator.ofObject(
+            window,
+            "statusBarColor",
+            ArgbEvaluator(),
+            currentBackgroundColor,
+            newBackgroundColor
+        ).apply {
+            duration = UI_MODE_CROSSFADE_DURATION_MILLIS
+        }
+        val navigationBarColorAnimator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ObjectAnimator.ofObject(
+                window,
+                "navigationBarColor",
+                ArgbEvaluator(),
+                currentBackgroundColor,
+                newBackgroundColor
+            ).apply {
+                duration = UI_MODE_CROSSFADE_DURATION_MILLIS
+            }
+        } else null
+        val backgroundAnimator = ObjectAnimator.ofObject(
             fullscreenContent,
             "backgroundColor",
             ArgbEvaluator(),
@@ -230,22 +275,22 @@ class ScreenLitActivity : AppCompatActivity() {
             newBackgroundColor
         ).apply {
             duration = UI_MODE_CROSSFADE_DURATION_MILLIS
+        }
+        val animationsToPlay = mutableListOf(textColorAnimator, statusBarColorAnimator, backgroundAnimator)
+        navigationBarColorAnimator?.let { animationsToPlay.add(it) }
+        AnimatorSet().apply {
+            playTogether(animationsToPlay.toList())
+            start()
             addListener(object : SimpleAnimatorListener() {
 
                 override fun onAnimationEnd(animation: Animator) {
                     setSystemBarBackgrounds(newStatusBarColor, newNavigationBarColor)
-                    gestureDescriptionTv.setTextColor(
-                        ResourcesCompat.getColor(
-                            resources,
-                            newTutorialTextColor,
-                            null
-                        )
-                    )
-                    isNightVision = !isNightVision
+                    onAnimationEnd()
                 }
 
             })
-        }.start()
+        }
+
     }
 
     private fun toggle() {
