@@ -29,9 +29,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.preference.PreferenceManager
 import dev.gerlot.screenlit.extension.setSystemBarBackgrounds
+import dev.gerlot.screenlit.util.ScreenBrightnessManager
 import dev.gerlot.screenlit.util.SimpleAnimatorListener
-import kotlin.math.abs
-
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -81,8 +80,7 @@ class ScreenLitActivity : AppCompatActivity() {
 
     private var isNightVision: Boolean = false
 
-    private var screenBrightnessChangeStart: Float? = null
-    private var screenBrightnessAtChangeStart: Float? = null
+    private var screenBrightnessManager = ScreenBrightnessManager()
 
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
@@ -137,25 +135,30 @@ class ScreenLitActivity : AppCompatActivity() {
                 MotionEvent.ACTION_DOWN -> {
                     val y = motionEvent.y
                     if (isWithinActiveBounds(y, view.height)) { // Ignore movement starting out-of-bound
-                        screenBrightnessChangeStart = motionEvent.y
-                        screenBrightnessAtChangeStart = window?.attributes?.let { Math.round(it.screenBrightness * 1000f) / 1000f }
+                        screenBrightnessManager.onStartScreenBrightnessChange(
+                            startCoordinate = motionEvent.y,
+                            currentScreenBrightness = window?.attributes?.screenBrightness
+                        )
                     }
                 }
                 MotionEvent.ACTION_MOVE -> {
-                    screenBrightnessChangeStart?.let { start ->
-                        val viewHeight = view.height
-                        val normalizedStart = calculateNormalizedScreenPosition(start, view.height)
-                        val y = motionEvent.y
-                        if (!isSmallMove(start, y, viewHeight)) { // Ignore small movement that can be an imprecise tap
-                            val normalizedScreenPosition = calculateNormalizedScreenPosition(y, viewHeight)
-                            val screenBrightnessChange = Math.round((normalizedScreenPosition - normalizedStart) * 1000f) / 1000f * 2f
-                            changeScreenBrightness(screenBrightnessChange)
-                        }
+                    if (screenBrightnessManager.changingBrightness) {
+                        screenBrightnessManager.onScreenBrightnessChangeRequest(
+                            view.height,
+                            motionEvent.y,
+                            onChangeScreenBrightness = { newScreenBrightness ->
+                                window?.attributes?.let { layoutParams ->
+                                    layoutParams.screenBrightness = newScreenBrightness
+                                    window?.attributes = layoutParams
+                                }
+                            }
+                        )
                     }
                 }
                 MotionEvent.ACTION_UP -> {
-                    screenBrightnessChangeStart = null
-                    screenBrightnessAtChangeStart = null
+                    if (screenBrightnessManager.changingBrightness) {
+                        screenBrightnessManager.onEndScreenBrightnessChange()
+                    }
                 }
             }
             true
@@ -193,28 +196,10 @@ class ScreenLitActivity : AppCompatActivity() {
             .apply()
     }
 
-    private fun calculateNormalizedScreenPosition(y: Float, viewHeight: Int) = Math.round(1f.minus(Math.round((y / viewHeight) * 1000f) / 1000f) * 1000f) / 1000f
-
     private fun isWithinActiveBounds(y: Float, viewHeight: Int): Boolean {
         val topInset = Math.round((viewHeight / TOP_INSET_DIVISOR) * 1000f) / 1000f
         val bottomInset = Math.round((viewHeight - (viewHeight / BOTTOM_INSET_DIVISOR)) * 1000f) / 1000f
         return y in topInset..bottomInset
-    }
-
-    private fun isSmallMove(start: Float, y: Float, viewHeight: Int): Boolean {
-        val distance = abs(start - y)
-        val threshold = viewHeight / CHANGE_THRESHOLD_DIVISOR
-        return distance < threshold
-    }
-
-    private fun changeScreenBrightness(brightnessChange: Float) {
-        window?.attributes?.let { layoutParams ->
-            val previousBrightness = screenBrightnessAtChangeStart
-            previousBrightness?.let {
-                layoutParams.screenBrightness = (Math.round((it + brightnessChange) * 1000f) / 1000f).coerceIn(0f, 1f)
-                window?.attributes = layoutParams
-            }
-        }
     }
 
     private fun toggleNightVisionMode() {
@@ -368,8 +353,6 @@ class ScreenLitActivity : AppCompatActivity() {
         private const val TOP_INSET_DIVISOR = 10f
 
         private const val BOTTOM_INSET_DIVISOR = 10f
-
-        private const val CHANGE_THRESHOLD_DIVISOR = 160f
 
         fun newIntent(context: Context) = Intent(context, ScreenLitActivity::class.java)
 
