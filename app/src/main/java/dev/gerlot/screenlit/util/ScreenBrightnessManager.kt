@@ -22,7 +22,7 @@ class ScreenBrightnessManager {
             val normalizedStart = calculateNormalizedScreenPosition(start, viewHeight)
             if (!isSmallMove(start, y, viewHeight)) { // Ignore small movement that can be an imprecise tap
                 val normalizedScreenPosition = calculateNormalizedScreenPosition(y, viewHeight)
-                val screenBrightnessChange = Math.round((normalizedScreenPosition - normalizedStart) * 1000f) / 1000f * 2f
+                val screenBrightnessChange = Math.round((normalizedScreenPosition - normalizedStart) * 1000f) / 1000f * 1.2f
 
                 val previousBrightness = screenBrightnessAtChangeStart
                 previousBrightness?.let {
