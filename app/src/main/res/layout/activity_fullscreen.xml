@@ -6,6 +6,7 @@
     android:background="?attr/fullscreenBackgroundColor"
     android:theme="@style/ThemeOverlay.ScreenLit.FullscreenContainer"
     android:fitsSystemWindows="false"
+    android:animateLayoutChanges="true"
     tools:context=".ScreenLitActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
