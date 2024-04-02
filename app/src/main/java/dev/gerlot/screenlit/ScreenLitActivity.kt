@@ -222,7 +222,7 @@ class ScreenLitActivity : AppCompatActivity() {
             newBackgroundColor = if (isNightVision) Color.WHITE else Color.RED,
             newStatusBarColor = if (isNightVision) ResourcesCompat.getColor(resources, R.color.grey_100, null) else Color.RED,
             newNavigationBarColor = if (isNightVision) ResourcesCompat.getColor(resources, R.color.grey_100, null) else Color.RED,
-            newTutorialTextColor = if (isNightVision) ResourcesCompat.getColor(resources, R.color.grey_500, null) else ResourcesCompat.getColor(resources, R.color.grey_100, null),
+            newTextColor = if (isNightVision) ResourcesCompat.getColor(resources, R.color.grey_500, null) else ResourcesCompat.getColor(resources, R.color.grey_100, null),
             onAnimationEnd = {
                 isNightVision = !isNightVision
             }
@@ -234,75 +234,19 @@ class ScreenLitActivity : AppCompatActivity() {
         @ColorInt newBackgroundColor: Int,
         @ColorInt newStatusBarColor: Int,
         @ColorInt newNavigationBarColor: Int,
-        @ColorInt newTutorialTextColor: Int,
+        @ColorInt newTextColor: Int,
         onAnimationEnd: () -> Unit,
     ) {
-        val tutorialLine1TextColorAnimator = ObjectAnimator.ofObject(
-            tutorialLine1,
-            "textColor",
-            ArgbEvaluator(),
-            tutorialLine1.currentTextColor,
-            newTutorialTextColor
-        ).apply {
-            duration = UI_MODE_CROSSFADE_DURATION_MILLIS
-        }
-        val tutorialLine1DrawableTintAnimator = ObjectAnimator.ofObject(
-            tutorialLine1.compoundDrawables[0],
-            "tint",
-            ArgbEvaluator(),
-            tutorialLine1.currentTextColor,
-            newTutorialTextColor
-        ).apply {
-            duration = UI_MODE_CROSSFADE_DURATION_MILLIS
-        }
+        val tutorialLine1TextColorAnimator = createTextViewTextColorAnimator(tutorialLine1, newTextColor)
+        val tutorialLine1DrawableTintAnimator = createTextViewCompoundDrawableStartTintAnimator(tutorialLine1, newTextColor)
 
-        val tutorialLine2TextColorAnimator = ObjectAnimator.ofObject(
-            tutorialLine2,
-            "textColor",
-            ArgbEvaluator(),
-            tutorialLine2.currentTextColor,
-            newTutorialTextColor
-        ).apply {
-            duration = UI_MODE_CROSSFADE_DURATION_MILLIS
-        }
-        val tutorialLine2DrawableTintAnimator = ObjectAnimator.ofObject(
-            tutorialLine2.compoundDrawables[0],
-            "tint",
-            ArgbEvaluator(),
-            tutorialLine2.currentTextColor,
-            newTutorialTextColor
-        ).apply {
-            duration = UI_MODE_CROSSFADE_DURATION_MILLIS
-        }
+        val tutorialLine2TextColorAnimator = createTextViewTextColorAnimator(tutorialLine2, newTextColor)
+        val tutorialLine2DrawableTintAnimator = createTextViewCompoundDrawableStartTintAnimator(tutorialLine2, newTextColor)
 
-        val tutorialLine3TextColorAnimator = ObjectAnimator.ofObject(
-            tutorialLine3,
-            "textColor",
-            ArgbEvaluator(),
-            tutorialLine3.currentTextColor,
-            newTutorialTextColor
-        ).apply {
-            duration = UI_MODE_CROSSFADE_DURATION_MILLIS
-        }
-        val tutorialLine3DrawableTintAnimator = ObjectAnimator.ofObject(
-            tutorialLine3.compoundDrawables[0],
-            "tint",
-            ArgbEvaluator(),
-            tutorialLine3.currentTextColor,
-            newTutorialTextColor
-        ).apply {
-            duration = UI_MODE_CROSSFADE_DURATION_MILLIS
-        }
+        val tutorialLine3TextColorAnimator = createTextViewTextColorAnimator(tutorialLine3, newTextColor)
+        val tutorialLine3DrawableTintAnimator = createTextViewCompoundDrawableStartTintAnimator(tutorialLine3, newTextColor)
 
-        val appNameTextColorAnimator = ObjectAnimator.ofObject(
-            appName,
-            "textColor",
-            ArgbEvaluator(),
-            appName.currentTextColor,
-            newTutorialTextColor
-        ).apply {
-            duration = UI_MODE_CROSSFADE_DURATION_MILLIS
-        }
+        val appNameTextColorAnimator = createTextViewTextColorAnimator(appName, newTextColor)
 
         val statusBarColorAnimator = ObjectAnimator.ofObject(
             window,
@@ -358,6 +302,26 @@ class ScreenLitActivity : AppCompatActivity() {
             })
         }
 
+    }
+
+    private fun createTextViewTextColorAnimator(textView: TextView, @ColorInt newColor: Int) = ObjectAnimator.ofObject(
+        textView,
+        "textColor",
+        ArgbEvaluator(),
+        textView.currentTextColor,
+        newColor
+    ).apply {
+        duration = UI_MODE_CROSSFADE_DURATION_MILLIS
+    }
+
+    private fun createTextViewCompoundDrawableStartTintAnimator(textView: TextView, @ColorInt newColor: Int) = ObjectAnimator.ofObject(
+        textView.compoundDrawables[0],
+        "tint",
+        ArgbEvaluator(),
+        textView.currentTextColor,
+        newColor
+    ).apply {
+        duration = UI_MODE_CROSSFADE_DURATION_MILLIS
     }
 
     private fun toggle() {
