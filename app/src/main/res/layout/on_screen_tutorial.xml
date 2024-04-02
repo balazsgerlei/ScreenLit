@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        style="@style/TextAppearance.AppCompat.Large"
+        android:id="@+id/tutorial_line1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/tap_to_hide_and_show"
+        android:textColor="@color/grey_500"
+        android:drawablePadding="8dp"
+        app:drawableStartCompat="@drawable/ic_gesture_tap"
+        app:drawableTint="@color/grey_500"/>
+
+    <TextView
+        style="@style/TextAppearance.AppCompat.Large"
+        android:id="@+id/tutorial_line2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/double_tap_for_night_vision"
+        android:textColor="@color/grey_500"
+        android:drawablePadding="8dp"
+        app:drawableStartCompat="@drawable/ic_gesture_double_tap"
+        app:drawableTint="@color/grey_500"/>
+
+    <TextView
+        style="@style/TextAppearance.AppCompat.Large"
+        android:id="@+id/tutorial_line3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/swipe_to_change_brightness"
+        android:textColor="@color/grey_500"
+        android:drawablePadding="8dp"
+        app:drawableStartCompat="@drawable/ic_gesture_swipe_vertical"
+        app:drawableTint="@color/grey_500"/>
+
+</LinearLayout>

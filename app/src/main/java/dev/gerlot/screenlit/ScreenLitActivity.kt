@@ -40,6 +40,11 @@ class ScreenLitActivity : AppCompatActivity() {
 
     private lateinit var fullscreenContent: FrameLayout
     private lateinit var gestureDescriptionTv: TextView
+    private lateinit var onScreenTutorial: LinearLayout
+    private lateinit var tutorialLine1: TextView
+    private lateinit var tutorialLine2: TextView
+    private lateinit var tutorialLine3: TextView
+    private lateinit var appName: TextView
     private lateinit var fullscreenContentControls: LinearLayout
     private val hideHandler = Handler(Looper.myLooper()!!)
 
@@ -72,7 +77,9 @@ class ScreenLitActivity : AppCompatActivity() {
         // Delayed display of UI elements
         supportActionBar?.show()
         fullscreenContentControls.visibility = View.VISIBLE
-        gestureDescriptionTv.visibility = View.VISIBLE
+        //gestureDescriptionTv.visibility = View.VISIBLE
+        onScreenTutorial.visibility = View.VISIBLE
+        appName.visibility = View.VISIBLE
     }
     private var isFullscreen: Boolean = false
 
@@ -164,6 +171,13 @@ class ScreenLitActivity : AppCompatActivity() {
             true
         }
 
+        onScreenTutorial = findViewById(R.id.on_screen_tutorial)
+        tutorialLine1 = findViewById(R.id.tutorial_line1)
+        tutorialLine2 = findViewById(R.id.tutorial_line2)
+        tutorialLine3 = findViewById(R.id.tutorial_line3)
+
+        appName = findViewById(R.id.app_name)
+
         gestureDescriptionTv = findViewById(R.id.gestureDescriptionTv)
 
         fullscreenContentControls = findViewById(R.id.fullscreen_content_controls)
@@ -223,15 +237,73 @@ class ScreenLitActivity : AppCompatActivity() {
         @ColorInt newTutorialTextColor: Int,
         onAnimationEnd: () -> Unit,
     ) {
-        val textColorAnimator = ObjectAnimator.ofObject(
-            gestureDescriptionTv,
+        val tutorialLine1TextColorAnimator = ObjectAnimator.ofObject(
+            tutorialLine1,
             "textColor",
             ArgbEvaluator(),
-            gestureDescriptionTv.currentTextColor,
+            tutorialLine1.currentTextColor,
             newTutorialTextColor
         ).apply {
             duration = UI_MODE_CROSSFADE_DURATION_MILLIS
         }
+        val tutorialLine1DrawableTintAnimator = ObjectAnimator.ofObject(
+            tutorialLine1.compoundDrawables[0],
+            "tint",
+            ArgbEvaluator(),
+            tutorialLine1.currentTextColor,
+            newTutorialTextColor
+        ).apply {
+            duration = UI_MODE_CROSSFADE_DURATION_MILLIS
+        }
+
+        val tutorialLine2TextColorAnimator = ObjectAnimator.ofObject(
+            tutorialLine2,
+            "textColor",
+            ArgbEvaluator(),
+            tutorialLine2.currentTextColor,
+            newTutorialTextColor
+        ).apply {
+            duration = UI_MODE_CROSSFADE_DURATION_MILLIS
+        }
+        val tutorialLine2DrawableTintAnimator = ObjectAnimator.ofObject(
+            tutorialLine2.compoundDrawables[0],
+            "tint",
+            ArgbEvaluator(),
+            tutorialLine2.currentTextColor,
+            newTutorialTextColor
+        ).apply {
+            duration = UI_MODE_CROSSFADE_DURATION_MILLIS
+        }
+
+        val tutorialLine3TextColorAnimator = ObjectAnimator.ofObject(
+            tutorialLine3,
+            "textColor",
+            ArgbEvaluator(),
+            tutorialLine3.currentTextColor,
+            newTutorialTextColor
+        ).apply {
+            duration = UI_MODE_CROSSFADE_DURATION_MILLIS
+        }
+        val tutorialLine3DrawableTintAnimator = ObjectAnimator.ofObject(
+            tutorialLine3.compoundDrawables[0],
+            "tint",
+            ArgbEvaluator(),
+            tutorialLine3.currentTextColor,
+            newTutorialTextColor
+        ).apply {
+            duration = UI_MODE_CROSSFADE_DURATION_MILLIS
+        }
+
+        val appNameTextColorAnimator = ObjectAnimator.ofObject(
+            appName,
+            "textColor",
+            ArgbEvaluator(),
+            appName.currentTextColor,
+            newTutorialTextColor
+        ).apply {
+            duration = UI_MODE_CROSSFADE_DURATION_MILLIS
+        }
+
         val statusBarColorAnimator = ObjectAnimator.ofObject(
             window,
             "statusBarColor",
@@ -261,7 +333,17 @@ class ScreenLitActivity : AppCompatActivity() {
         ).apply {
             duration = UI_MODE_CROSSFADE_DURATION_MILLIS
         }
-        val animationsToPlay = mutableListOf(textColorAnimator, statusBarColorAnimator, backgroundAnimator)
+        val animationsToPlay = mutableListOf(
+            tutorialLine1TextColorAnimator,
+            tutorialLine1DrawableTintAnimator,
+            tutorialLine2TextColorAnimator,
+            tutorialLine2DrawableTintAnimator,
+            tutorialLine3TextColorAnimator,
+            tutorialLine3DrawableTintAnimator,
+            appNameTextColorAnimator,
+            statusBarColorAnimator,
+            backgroundAnimator
+        )
         navigationBarColorAnimator?.let { animationsToPlay.add(it) }
         AnimatorSet().apply {
             playTogether(animationsToPlay.toList())
@@ -291,7 +373,9 @@ class ScreenLitActivity : AppCompatActivity() {
         // Hide UI first
         supportActionBar?.hide()
         fullscreenContentControls.visibility = View.GONE
-        gestureDescriptionTv.visibility = View.GONE
+        //gestureDescriptionTv.visibility = View.GONE
+        onScreenTutorial.visibility = View.GONE
+        appName.visibility = View.GONE
         isFullscreen = false
 
         // Schedule a runnable to remove the status and navigation bar after a delay
