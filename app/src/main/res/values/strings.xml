@@ -3,4 +3,7 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="gesture_description">Tap to hide/show UI\n\nDouble tap for Night Vision preserving red light\n\nSwipe up/down to change brightness</string>
+    <string name="tap_to_hide_and_show">Tap to hide/show UI</string>
+    <string name="double_tap_for_night_vision">Double tap for Night Vision preserving red light</string>
+    <string name="swipe_to_change_brightness">Swipe up/down to change brightness</string>
 </resources>

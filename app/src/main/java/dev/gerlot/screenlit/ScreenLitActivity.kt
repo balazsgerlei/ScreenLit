@@ -40,6 +40,11 @@ class ScreenLitActivity : AppCompatActivity() {
 
     private lateinit var fullscreenContent: FrameLayout
     private lateinit var gestureDescriptionTv: TextView
+    private lateinit var onScreenTutorial: LinearLayout
+    private lateinit var tutorialLine1: TextView
+    private lateinit var tutorialLine2: TextView
+    private lateinit var tutorialLine3: TextView
+    private lateinit var appName: TextView
     private lateinit var fullscreenContentControls: LinearLayout
     private val hideHandler = Handler(Looper.myLooper()!!)
 
@@ -72,7 +77,9 @@ class ScreenLitActivity : AppCompatActivity() {
         // Delayed display of UI elements
         supportActionBar?.show()
         fullscreenContentControls.visibility = View.VISIBLE
-        gestureDescriptionTv.visibility = View.VISIBLE
+        //gestureDescriptionTv.visibility = View.VISIBLE
+        onScreenTutorial.visibility = View.VISIBLE
+        appName.visibility = View.VISIBLE
     }
     private var isFullscreen: Boolean = false
 
@@ -164,6 +171,13 @@ class ScreenLitActivity : AppCompatActivity() {
             true
         }
 
+        onScreenTutorial = findViewById(R.id.on_screen_tutorial)
+        tutorialLine1 = findViewById(R.id.tutorial_line1)
+        tutorialLine2 = findViewById(R.id.tutorial_line2)
+        tutorialLine3 = findViewById(R.id.tutorial_line3)
+
+        appName = findViewById(R.id.app_name)
+
         gestureDescriptionTv = findViewById(R.id.gestureDescriptionTv)
 
         fullscreenContentControls = findViewById(R.id.fullscreen_content_controls)
@@ -208,7 +222,7 @@ class ScreenLitActivity : AppCompatActivity() {
             newBackgroundColor = if (isNightVision) Color.WHITE else Color.RED,
             newStatusBarColor = if (isNightVision) ResourcesCompat.getColor(resources, R.color.grey_100, null) else Color.RED,
             newNavigationBarColor = if (isNightVision) ResourcesCompat.getColor(resources, R.color.grey_100, null) else Color.RED,
-            newTutorialTextColor = if (isNightVision) ResourcesCompat.getColor(resources, R.color.grey_500, null) else ResourcesCompat.getColor(resources, R.color.grey_100, null),
+            newTextColor = if (isNightVision) ResourcesCompat.getColor(resources, R.color.grey_500, null) else ResourcesCompat.getColor(resources, R.color.grey_100, null),
             onAnimationEnd = {
                 isNightVision = !isNightVision
             }
@@ -220,18 +234,20 @@ class ScreenLitActivity : AppCompatActivity() {
         @ColorInt newBackgroundColor: Int,
         @ColorInt newStatusBarColor: Int,
         @ColorInt newNavigationBarColor: Int,
-        @ColorInt newTutorialTextColor: Int,
+        @ColorInt newTextColor: Int,
         onAnimationEnd: () -> Unit,
     ) {
-        val textColorAnimator = ObjectAnimator.ofObject(
-            gestureDescriptionTv,
-            "textColor",
-            ArgbEvaluator(),
-            gestureDescriptionTv.currentTextColor,
-            newTutorialTextColor
-        ).apply {
-            duration = UI_MODE_CROSSFADE_DURATION_MILLIS
-        }
+        val tutorialLine1TextColorAnimator = createTextViewTextColorAnimator(tutorialLine1, newTextColor)
+        val tutorialLine1DrawableTintAnimator = createTextViewCompoundDrawableStartTintAnimator(tutorialLine1, newTextColor)
+
+        val tutorialLine2TextColorAnimator = createTextViewTextColorAnimator(tutorialLine2, newTextColor)
+        val tutorialLine2DrawableTintAnimator = createTextViewCompoundDrawableStartTintAnimator(tutorialLine2, newTextColor)
+
+        val tutorialLine3TextColorAnimator = createTextViewTextColorAnimator(tutorialLine3, newTextColor)
+        val tutorialLine3DrawableTintAnimator = createTextViewCompoundDrawableStartTintAnimator(tutorialLine3, newTextColor)
+
+        val appNameTextColorAnimator = createTextViewTextColorAnimator(appName, newTextColor)
+
         val statusBarColorAnimator = ObjectAnimator.ofObject(
             window,
             "statusBarColor",
@@ -261,7 +277,17 @@ class ScreenLitActivity : AppCompatActivity() {
         ).apply {
             duration = UI_MODE_CROSSFADE_DURATION_MILLIS
         }
-        val animationsToPlay = mutableListOf(textColorAnimator, statusBarColorAnimator, backgroundAnimator)
+        val animationsToPlay = mutableListOf(
+            tutorialLine1TextColorAnimator,
+            tutorialLine1DrawableTintAnimator,
+            tutorialLine2TextColorAnimator,
+            tutorialLine2DrawableTintAnimator,
+            tutorialLine3TextColorAnimator,
+            tutorialLine3DrawableTintAnimator,
+            appNameTextColorAnimator,
+            statusBarColorAnimator,
+            backgroundAnimator
+        )
         navigationBarColorAnimator?.let { animationsToPlay.add(it) }
         AnimatorSet().apply {
             playTogether(animationsToPlay.toList())
@@ -278,6 +304,26 @@ class ScreenLitActivity : AppCompatActivity() {
 
     }
 
+    private fun createTextViewTextColorAnimator(textView: TextView, @ColorInt newColor: Int) = ObjectAnimator.ofObject(
+        textView,
+        "textColor",
+        ArgbEvaluator(),
+        textView.currentTextColor,
+        newColor
+    ).apply {
+        duration = UI_MODE_CROSSFADE_DURATION_MILLIS
+    }
+
+    private fun createTextViewCompoundDrawableStartTintAnimator(textView: TextView, @ColorInt newColor: Int) = ObjectAnimator.ofObject(
+        textView.compoundDrawables[0],
+        "tint",
+        ArgbEvaluator(),
+        textView.currentTextColor,
+        newColor
+    ).apply {
+        duration = UI_MODE_CROSSFADE_DURATION_MILLIS
+    }
+
     private fun toggle() {
         hideHandler.removeCallbacks(hideRunnable)
         if (isFullscreen) {
@@ -291,7 +337,9 @@ class ScreenLitActivity : AppCompatActivity() {
         // Hide UI first
         supportActionBar?.hide()
         fullscreenContentControls.visibility = View.GONE
-        gestureDescriptionTv.visibility = View.GONE
+        //gestureDescriptionTv.visibility = View.GONE
+        onScreenTutorial.visibility = View.GONE
+        appName.visibility = View.GONE
         isFullscreen = false
 
         // Schedule a runnable to remove the status and navigation bar after a delay
