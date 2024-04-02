@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KépernyőFény</string>
+    <string name="dummy_button">Példa Gomb</string>
+    <string name="dummy_content">PÉLDA TARTALOM</string>
+    <string name="tap_to_hide_and_show">Egy érintésre a feliratok elrejthetőek vagy megjeleníthetőek</string>
+    <string name="double_tap_for_night_vision">Dupla koppintással ki- vagy bekapcsolható az éjszakai mód (piros fény)</string>
+    <string name="swipe_to_change_brightness">Fel-le húzással állítható a fényerő</string>
+</resources>

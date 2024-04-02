@@ -50,17 +50,6 @@
         android:layout_gravity="center" />
 
     <TextView
-        android:id="@+id/gestureDescriptionTv"
-        style="@style/TextAppearance.AppCompat.Large"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
-        android:gravity="center"
-        android:text="@string/gesture_description"
-        android:textColor="@color/grey_500" />
-
-    <TextView
         android:id="@+id/app_name"
         style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"

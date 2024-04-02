@@ -39,7 +39,6 @@ import dev.gerlot.screenlit.util.SimpleAnimatorListener
 class ScreenLitActivity : AppCompatActivity() {
 
     private lateinit var fullscreenContent: FrameLayout
-    private lateinit var gestureDescriptionTv: TextView
     private lateinit var onScreenTutorial: LinearLayout
     private lateinit var tutorialLine1: TextView
     private lateinit var tutorialLine2: TextView
@@ -177,8 +176,6 @@ class ScreenLitActivity : AppCompatActivity() {
         tutorialLine3 = findViewById(R.id.tutorial_line3)
 
         appName = findViewById(R.id.app_name)
-
-        gestureDescriptionTv = findViewById(R.id.gestureDescriptionTv)
 
         fullscreenContentControls = findViewById(R.id.fullscreen_content_controls)
 
