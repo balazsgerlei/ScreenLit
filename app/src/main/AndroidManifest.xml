@@ -14,9 +14,13 @@
 
         <activity
             android:name=".ScreenLitActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/Theme.ScreenLit.Fullscreen"
             android:exported="true"
-            android:theme="@style/Theme.ScreenLit.Fullscreen">
+            android:launchMode="singleInstance"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:resizeableActivity="false"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity,NonResizeableActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
