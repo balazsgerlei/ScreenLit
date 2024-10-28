@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
@@ -141,9 +142,13 @@ class ScreenLitActivity : AppCompatActivity() {
                 MotionEvent.ACTION_DOWN -> {
                     val y = motionEvent.y
                     if (isWithinActiveBounds(y, view.height)) { // Ignore movement starting out-of-bound
+                        val screenBrightnessSetting =
+                            Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS).toFloat()
+                        val normalizedScreenBrightnessSetting = Math.round((screenBrightnessSetting / 255) * 1000f) / 1000f
+                        val windowScreenBrightness = window?.attributes?.screenBrightness
                         screenBrightnessManager.onStartScreenBrightnessChange(
                             startCoordinate = motionEvent.y,
-                            currentScreenBrightness = window?.attributes?.screenBrightness
+                            currentScreenBrightness = if (windowScreenBrightness != null && windowScreenBrightness > 0f) windowScreenBrightness else normalizedScreenBrightnessSetting
                         )
                     }
                 }
