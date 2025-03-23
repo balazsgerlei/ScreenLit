@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.ScreenLit.Fullscreen" parent="Theme.ScreenLit">
-        <item name="android:actionBarStyle">@style/Widget.Theme.ScreenLit.ActionBar.Fullscreen
-        </item>
+    <style name="Theme.ScreenLit.Fullscreen">
+        <item name="android:actionBarStyle">@style/Widget.Theme.ScreenLit.ActionBar.Fullscreen</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowBackground">@null</item>
         <item name="android:windowFullscreen">true</item>
