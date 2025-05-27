@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="compose"
+        android:enabled="true"
+        android:icon="@drawable/ic_quick_settings"
+        android:shortcutShortLabel="@string/night_vision_shortcut_short"
+        android:shortcutLongLabel="@string/night_vision_shortcut_long">
+        <intent
+            android:action="dev.gerlot.screenlit.NIGHT_VISION"
+            android:targetPackage="dev.gerlot.screenlit"
+            android:targetClass="dev.gerlot.screenlit.ScreenLitActivity" />
+    </shortcut>
+</shortcuts>
