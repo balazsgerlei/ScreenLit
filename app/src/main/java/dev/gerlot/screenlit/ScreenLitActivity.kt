@@ -25,6 +25,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -212,10 +213,9 @@ class ScreenLitActivity : AppCompatActivity() {
     private fun isFirstLaunch() = !PreferenceManager.getDefaultSharedPreferences(this).getBoolean(KEY_LAUNCHED_BEFORE, false)
 
     private fun onFirstLaunch() {
-        PreferenceManager.getDefaultSharedPreferences(this)
-            .edit()
-            .putBoolean(KEY_LAUNCHED_BEFORE, true)
-            .apply()
+        PreferenceManager.getDefaultSharedPreferences(this).edit {
+            putBoolean(KEY_LAUNCHED_BEFORE, true)
+        }
     }
 
     private fun isWithinActiveBounds(y: Float, viewHeight: Int): Boolean {
