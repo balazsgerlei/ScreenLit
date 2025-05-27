@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -28,6 +29,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.widget.TextViewCompat
 import androidx.preference.PreferenceManager
 import dev.gerlot.screenlit.extension.setSystemBarBackgrounds
 import dev.gerlot.screenlit.util.ScreenBrightnessManager
@@ -201,6 +203,10 @@ class ScreenLitActivity : AppCompatActivity() {
             // are available.
             delayedHide(INITIAL_AUTO_HIDE_DELAY_MILLIS)
         }
+
+        if (intent.action == "dev.gerlot.screenlit.NIGHT_VISION") {
+            enableNightVisionMode()
+        }
     }
 
     private fun isFirstLaunch() = !PreferenceManager.getDefaultSharedPreferences(this).getBoolean(KEY_LAUNCHED_BEFORE, false)
@@ -216,6 +222,25 @@ class ScreenLitActivity : AppCompatActivity() {
         val topInset = Math.round((viewHeight / TOP_INSET_DIVISOR) * 1000f) / 1000f
         val bottomInset = Math.round((viewHeight - (viewHeight / BOTTOM_INSET_DIVISOR)) * 1000f) / 1000f
         return y in topInset..bottomInset
+    }
+
+    private fun enableNightVisionMode() {
+        tutorialLine1.setTextColor(Color.WHITE)
+        TextViewCompat.setCompoundDrawableTintList(tutorialLine1, ColorStateList.valueOf(Color.WHITE))
+
+        tutorialLine2.setTextColor(Color.WHITE)
+        TextViewCompat.setCompoundDrawableTintList(tutorialLine2, ColorStateList.valueOf(Color.WHITE))
+
+        tutorialLine3.setTextColor(Color.WHITE)
+        TextViewCompat.setCompoundDrawableTintList(tutorialLine3, ColorStateList.valueOf(Color.WHITE))
+
+        appName.setTextColor(Color.WHITE)
+
+        window.statusBarColor = Color.RED
+        window.navigationBarColor = Color.RED
+        fullscreenContent.setBackgroundColor(Color.RED)
+
+        isNightVision = true
     }
 
     private fun toggleNightVisionMode() {
