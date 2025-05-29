@@ -239,6 +239,7 @@ class ScreenLitActivity : AppCompatActivity() {
         window.statusBarColor = Color.RED
         window.navigationBarColor = Color.RED
         fullscreenContent.setBackgroundColor(Color.RED)
+        setSystemBarBackgrounds(Color.RED, Color.RED)
 
         isNightVision = true
     }
