@@ -22,6 +22,7 @@ import android.view.WindowInsets
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +31,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
 import androidx.preference.PreferenceManager
 import dev.gerlot.screenlit.extension.setSystemBarBackgrounds
@@ -49,6 +51,7 @@ class ScreenLitActivity : AppCompatActivity() {
     private lateinit var tutorialLine3: TextView
     private lateinit var appName: TextView
     private lateinit var fullscreenContentControls: LinearLayout
+    private lateinit var brightnessProgress: ProgressBar
     private val hideHandler = Handler(Looper.myLooper()!!)
 
     @SuppressLint("InlinedApi")
@@ -165,6 +168,10 @@ class ScreenLitActivity : AppCompatActivity() {
                                     layoutParams.screenBrightness = newScreenBrightness
                                     window?.attributes = layoutParams
                                 }
+                                if (!brightnessProgress.isVisible) {
+                                    brightnessProgress.isVisible = true
+                                }
+                                brightnessProgress.progress = Math.round(newScreenBrightness * 100f)
                             }
                         )
                     }
@@ -173,6 +180,7 @@ class ScreenLitActivity : AppCompatActivity() {
                     if (screenBrightnessManager.changingBrightness) {
                         screenBrightnessManager.onEndScreenBrightnessChange()
                     }
+                    brightnessProgress.isVisible = false
                 }
             }
             true
@@ -182,6 +190,7 @@ class ScreenLitActivity : AppCompatActivity() {
         tutorialLine1 = findViewById(R.id.tutorial_line1)
         tutorialLine2 = findViewById(R.id.tutorial_line2)
         tutorialLine3 = findViewById(R.id.tutorial_line3)
+        brightnessProgress = findViewById(R.id.brightness_progress)
 
         appName = findViewById(R.id.app_name)
 

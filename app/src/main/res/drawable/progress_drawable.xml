@@ -1,0 +1,17 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@android:id/background" android:drawable="@android:color/transparent"/>
+
+    <item android:id="@android:id/progress">
+        <clip android:clipOrientation="vertical" android:gravity="bottom">
+            <color android:color="@color/progress_overlay" />
+        </clip>
+    </item>
+
+    <item android:clipOrientation="vertical" android:gravity="bottom">
+        <clip>
+            <color android:color="@android:color/transparent" />
+        </clip>
+    </item>
+
+</layer-list>

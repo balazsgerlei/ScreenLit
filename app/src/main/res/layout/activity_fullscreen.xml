@@ -19,6 +19,18 @@
         android:keepScreenOn="true"
         android:fitsSystemWindows="true">
 
+        <ProgressBar
+            android:id="@+id/brightness_progress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:progressDrawable="@drawable/progress_drawable"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:indeterminate="false"
+            android:max="100"
+            android:visibility="gone"
+            tools:progress="80"
+            tools:visibility="visible" />
+
         <LinearLayout
             android:id="@+id/fullscreen_content_controls"
             style="@style/Widget.Theme.ScreenLit.ButtonBar.Fullscreen"
