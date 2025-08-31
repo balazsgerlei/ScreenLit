@@ -14,24 +14,28 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import android.util.TypedValue
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowInsets
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.WindowCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.core.widget.TextViewCompat
 import androidx.preference.PreferenceManager
 import dev.gerlot.screenlit.ScreenLitActivity.Companion.AUTO_HIDE
@@ -116,14 +120,13 @@ class ScreenLitActivity : AppCompatActivity() {
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_fullscreen)
         val statusBarColor = ResourcesCompat.getColor(resources, R.color.grey_100, null)
         val navigationBarColor = ResourcesCompat.getColor(resources, R.color.grey_100, null)
         setSystemBarBackgrounds(statusBarColor, navigationBarColor)
-
-        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         isFullscreen = true
 
@@ -195,6 +198,19 @@ class ScreenLitActivity : AppCompatActivity() {
         brightnessProgress = findViewById(R.id.brightness_progress)
 
         appName = findViewById(R.id.app_name)
+        ViewCompat.setOnApplyWindowInsetsListener(appName) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val additionalBottomMarginPx = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                8F,
+                resources.displayMetrics
+            ).toInt()
+            view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = insets.bottom + additionalBottomMarginPx
+            }
+            // No need to pass down window insets to descendant views.
+            WindowInsetsCompat.CONSUMED
+        }
 
         fullscreenContentControls = findViewById(R.id.fullscreen_content_controls)
 
