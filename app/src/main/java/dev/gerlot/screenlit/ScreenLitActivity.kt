@@ -34,6 +34,8 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
 import androidx.preference.PreferenceManager
+import dev.gerlot.screenlit.ScreenLitActivity.Companion.AUTO_HIDE
+import dev.gerlot.screenlit.ScreenLitActivity.Companion.AUTO_HIDE_DELAY_MILLIS
 import dev.gerlot.screenlit.extension.setSystemBarBackgrounds
 import dev.gerlot.screenlit.util.ScreenBrightnessManager
 import dev.gerlot.screenlit.util.SimpleAnimatorListener
@@ -245,8 +247,6 @@ class ScreenLitActivity : AppCompatActivity() {
 
         appName.setTextColor(Color.WHITE)
 
-        window.statusBarColor = Color.RED
-        window.navigationBarColor = Color.RED
         fullscreenContent.setBackgroundColor(Color.RED)
         setSystemBarBackgrounds(Color.RED, Color.RED)
 
