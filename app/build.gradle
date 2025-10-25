@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'dev.gerlot.screenlit'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "dev.gerlot.screenlit"
         minSdk 25
-        targetSdk 35
+        targetSdk 36
         versionCode 16
         versionName "2025.3.1"
 
@@ -44,7 +44,7 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.16.0'
+    implementation 'androidx.core:core-ktx:1.17.0'
     implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation 'com.github.balazsgerlei:SystemBarColorist:1.0.0-alpha02'
