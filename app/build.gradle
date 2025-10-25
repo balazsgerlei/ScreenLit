@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'dev.gerlot.screenlit'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "dev.gerlot.screenlit"
         minSdk 25
-        targetSdk 35
+        targetSdk 36
         versionCode 16
         versionName "2025.3.1"
 
