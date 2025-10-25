@@ -22,6 +22,7 @@
             android:theme="@style/Theme.ScreenLit.Fullscreen"
             android:exported="true"
             android:launchMode="singleInstance"
+            android:showOnLockScreen="true"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:resizeableActivity="false"

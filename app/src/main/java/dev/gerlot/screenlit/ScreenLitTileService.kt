@@ -19,6 +19,7 @@ class ScreenLitTileService: TileService() {
                 PendingIntent.FLAG_IMMUTABLE)
             startActivityAndCollapse(pendingIntent)
         } else {
+            @Suppress("DEPRECATION")
             startActivityAndCollapse(launchIntent)
         }
     }
