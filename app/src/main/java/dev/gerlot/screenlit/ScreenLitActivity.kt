@@ -46,7 +46,6 @@ import dev.gerlot.screenlit.extension.setSystemBarBackgrounds
 import dev.gerlot.screenlit.util.ScreenBrightnessManager
 import dev.gerlot.screenlit.util.SimpleAnimatorListener
 import kotlin.math.roundToInt
-import kotlin.math.sqrt
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -186,7 +185,7 @@ class ScreenLitActivity : AppCompatActivity() {
                         screenBrightnessManager.onScreenBrightnessChangeRequest(
                             view.height,
                             motionEvent.y,
-                            onChangeScreenBrightness = { newScreenBrightness ->
+                            onChangeScreenBrightness = { newScreenBrightness, newScreenProgress ->
                                 window?.attributes?.let { layoutParams ->
                                     layoutParams.screenBrightness = newScreenBrightness
                                     window?.attributes = layoutParams
@@ -195,10 +194,7 @@ class ScreenLitActivity : AppCompatActivity() {
                                     brightnessProgress.isVisible = true
                                 }
 
-                                // When setting the progress, we need to calculate the square root
-                                // of the new brightness value to reverse the gamma correction
-                                // that is applied to it to have a linear progress display
-                                brightnessProgress.progress = (sqrt(newScreenBrightness) * 100f).roundToInt()
+                                brightnessProgress.progress = (newScreenProgress * 100f).roundToInt()
                             }
                         )
                     }
