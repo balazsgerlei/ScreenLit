@@ -1,6 +1,7 @@
 package dev.gerlot.screenlit.util
 
 import kotlin.math.abs
+import kotlin.math.sqrt
 
 class ScreenBrightnessManager {
 
@@ -10,10 +11,14 @@ class ScreenBrightnessManager {
     val changingBrightness: Boolean
         get() = screenBrightnessChangeStart != null
 
-    fun onStartScreenBrightnessChange(startCoordinate: Float, currentScreenBrightness: Float?) {
+    fun onStartScreenBrightnessChange(y: Float, currentScreenBrightness: Float?) {
         currentScreenBrightness?.let { brightness ->
-            screenBrightnessChangeStart = startCoordinate
-            screenBrightnessAtChangeStart = Math.round(brightness * 1000f) / 1000f
+            screenBrightnessChangeStart = y
+
+            // The brightness value needs to be linearized for the starting point
+            // because it is squared when setting the new value for gamma correction
+            val linearizedBrightness = sqrt(brightness)
+            screenBrightnessAtChangeStart = Math.round(linearizedBrightness * 1000f) / 1000f
         }
     }
 
@@ -22,12 +27,14 @@ class ScreenBrightnessManager {
             val normalizedStart = calculateNormalizedScreenPosition(start, viewHeight)
             if (!isSmallMove(start, y, viewHeight)) { // Ignore small movement that can be an imprecise tap
                 val normalizedScreenPosition = calculateNormalizedScreenPosition(y, viewHeight)
-                val screenBrightnessChange = Math.round((normalizedScreenPosition - normalizedStart) * 1000f) / 1000f * 1.2f
+                val screenBrightnessChange = Math.round((normalizedScreenPosition - normalizedStart) * 1000f) / 1000f
 
                 val previousBrightness = screenBrightnessAtChangeStart
                 previousBrightness?.let {
                     val newBrightness = (Math.round((it + screenBrightnessChange) * 1000f) / 1000f).coerceIn(0f, 1f)
-                    onChangeScreenBrightness(newBrightness)
+
+                    // For gamma correction, the new value is squared
+                    onChangeScreenBrightness(newBrightness * newBrightness)
                 }
             }
         }
