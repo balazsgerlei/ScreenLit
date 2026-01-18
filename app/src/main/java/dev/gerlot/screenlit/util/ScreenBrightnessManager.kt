@@ -1,6 +1,7 @@
 package dev.gerlot.screenlit.util
 
 import kotlin.math.abs
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 class ScreenBrightnessManager {
@@ -18,7 +19,7 @@ class ScreenBrightnessManager {
             // The brightness value needs to be linearized for the starting point
             // because it is squared when setting the new value for gamma correction
             val linearizedBrightness = sqrt(brightness)
-            screenBrightnessAtChangeStart = Math.round(linearizedBrightness * 1000f) / 1000f
+            screenBrightnessAtChangeStart = (linearizedBrightness * 1000f).roundToInt() / 1000f
         }
     }
 
@@ -27,11 +28,11 @@ class ScreenBrightnessManager {
             val normalizedStart = calculateNormalizedScreenPosition(start, viewHeight)
             if (!isSmallMove(start, y, viewHeight)) { // Ignore small movement that can be an imprecise tap
                 val normalizedScreenPosition = calculateNormalizedScreenPosition(y, viewHeight)
-                val screenBrightnessChange = Math.round((normalizedScreenPosition - normalizedStart) * 1000f) / 1000f
+                val screenBrightnessChange = ((normalizedScreenPosition - normalizedStart) * 1000f).roundToInt() / 1000f
 
                 val previousBrightness = screenBrightnessAtChangeStart
                 previousBrightness?.let {
-                    val newBrightness = (Math.round((it + screenBrightnessChange) * 1000f) / 1000f).coerceIn(0f, 1f)
+                    val newBrightness = (((it + screenBrightnessChange) * 1000f).roundToInt() / 1000f).coerceIn(0f, 1f)
 
                     // For gamma correction, the new value is squared
                     onChangeScreenBrightness(newBrightness * newBrightness)
@@ -45,7 +46,8 @@ class ScreenBrightnessManager {
         screenBrightnessAtChangeStart = null
     }
 
-    private fun calculateNormalizedScreenPosition(y: Float, viewHeight: Int) = Math.round(1f.minus(Math.round((y / viewHeight) * 1000f) / 1000f) * 1000f) / 1000f
+    private fun calculateNormalizedScreenPosition(y: Float, viewHeight: Int) =
+        (1f.minus(((y / viewHeight) * 1000f).roundToInt() / 1000f) * 1000f).roundToInt() / 1000f
 
     private fun isSmallMove(start: Float, y: Float, viewHeight: Int): Boolean {
         val distance = abs(start - y)

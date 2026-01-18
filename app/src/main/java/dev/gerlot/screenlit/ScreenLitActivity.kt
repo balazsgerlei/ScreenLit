@@ -45,6 +45,7 @@ import dev.gerlot.screenlit.ScreenLitActivity.Companion.AUTO_HIDE_DELAY_MILLIS
 import dev.gerlot.screenlit.extension.setSystemBarBackgrounds
 import dev.gerlot.screenlit.util.ScreenBrightnessManager
 import dev.gerlot.screenlit.util.SimpleAnimatorListener
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 /**
@@ -172,7 +173,7 @@ class ScreenLitActivity : AppCompatActivity() {
                     if (isWithinActiveBounds(y, view.height)) { // Ignore movement starting out-of-bound
                         val screenBrightnessSetting =
                             Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS).toFloat()
-                        val normalizedScreenBrightnessSetting = Math.round((screenBrightnessSetting / 255) * 1000f) / 1000f
+                        val normalizedScreenBrightnessSetting = ((screenBrightnessSetting / 255) * 1000f).roundToInt() / 1000f
                         val windowScreenBrightness = window?.attributes?.screenBrightness
                         screenBrightnessManager.onStartScreenBrightnessChange(
                             y = motionEvent.y,
@@ -197,7 +198,7 @@ class ScreenLitActivity : AppCompatActivity() {
                                 // When setting the progress, we need to calculate the square root
                                 // of the new brightness value to reverse the gamma correction
                                 // that is applied to it to have a linear progress display
-                                brightnessProgress.progress = Math.round(sqrt(newScreenBrightness) * 100f)
+                                brightnessProgress.progress = (sqrt(newScreenBrightness) * 100f).roundToInt()
                             }
                         )
                     }
@@ -267,8 +268,8 @@ class ScreenLitActivity : AppCompatActivity() {
     }
 
     private fun isWithinActiveBounds(y: Float, viewHeight: Int): Boolean {
-        val topInset = Math.round((viewHeight / TOP_INSET_DIVISOR) * 1000f) / 1000f
-        val bottomInset = Math.round((viewHeight - (viewHeight / BOTTOM_INSET_DIVISOR)) * 1000f) / 1000f
+        val topInset = ((viewHeight / TOP_INSET_DIVISOR) * 1000f).roundToInt() / 1000f
+        val bottomInset = ((viewHeight - (viewHeight / BOTTOM_INSET_DIVISOR)) * 1000f).roundToInt() / 1000f
         return y in topInset..bottomInset
     }
 
