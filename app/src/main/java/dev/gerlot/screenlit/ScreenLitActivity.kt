@@ -129,7 +129,7 @@ class ScreenLitActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
-            (getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager)?.apply {
+            (getSystemService(KEYGUARD_SERVICE) as? KeyguardManager)?.apply {
                 requestDismissKeyguard(this@ScreenLitActivity, null)
             }
         } else {

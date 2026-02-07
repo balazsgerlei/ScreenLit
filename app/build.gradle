@@ -4,41 +4,41 @@ plugins {
 }
 
 android {
-    namespace 'dev.gerlot.screenlit'
-    compileSdk 36
+    namespace = 'dev.gerlot.screenlit'
+    compileSdk = 36
 
     defaultConfig {
-        applicationId "dev.gerlot.screenlit"
-        minSdk 25
-        targetSdk 36
-        versionCode 18
-        versionName "2026.1.0"
+        applicationId = "dev.gerlot.screenlit"
+        targetSdk = 36
+        minSdk = 25
+        versionCode = 18
+        versionName = "2026.1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
-            debuggable false
+            minifyEnabled = true
+            shrinkResources = true
+            debuggable = false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            minifyEnabled false
-            shrinkResources false
-            debuggable true
+            minifyEnabled = false
+            shrinkResources = false
+            debuggable = true
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
         jvmTarget = '17'
     }
     androidResources {
-        generateLocaleConfig true
+        generateLocaleConfig = true
     }
 
 }
