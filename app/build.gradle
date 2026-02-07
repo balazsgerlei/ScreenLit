@@ -11,8 +11,8 @@ android {
         applicationId = "dev.gerlot.screenlit"
         targetSdk = 36
         minSdk = 25
-        versionCode = 18
-        versionName = "2026.1.0"
+        versionCode = 19
+        versionName = "2026.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
