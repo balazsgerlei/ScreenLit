@@ -5,7 +5,6 @@ import android.animation.AnimatorSet
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -129,15 +128,12 @@ class ScreenLitActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
-            (getSystemService(KEYGUARD_SERVICE) as? KeyguardManager)?.apply {
-                requestDismissKeyguard(this@ScreenLitActivity, null)
-            }
         } else {
             @Suppress("DEPRECATION")
             this.window.addFlags(
-                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
-                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+            )
         }
 
         setContentView(R.layout.activity_fullscreen)
