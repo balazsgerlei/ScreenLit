@@ -1,5 +1,6 @@
 package dev.gerlot.screenlit.util
 
+import android.os.Build
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -77,7 +78,11 @@ class ScreenBrightnessManager {
 
         private const val CHANGE_THRESHOLD_DIVISOR = 160f
 
-        private const val BRIGHTNESS_FLOOR = 0.01f
+        private val BRIGHTNESS_FLOOR = if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            0.07f // Safe floor for Android 9 and below to avoid screen brightness to actually turning up
+        } else {
+            0.02f // Standard floor for Android 10+
+        }
 
     }
 
